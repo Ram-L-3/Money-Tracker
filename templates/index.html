@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Money Tracker</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main>
+    <h1>Money Tracker</h1>
+
+    <section class="cards">
+      <div class="card">
+        <span class="label">Income</span>
+        <span class="value income">₹{{ '%.2f' | format(income) }}</span>
+      </div>
+      <div class="card">
+        <span class="label">Spent</span>
+        <span class="value expense">₹{{ '%.2f' | format(expense) }}</span>
+      </div>
+      <div class="card">
+        <span class="label">Balance</span>
+        <span class="value">₹{{ '%.2f' | format(balance) }}</span>
+      </div>
+    </section>
+
+    <h2>Add transaction</h2>
+    <form action="/add" method="post" class="add-form">
+      <input type="number" step="0.01" name="amount" placeholder="Amount" required>
+      <select name="type">
+        <option value="expense">Expense</option>
+        <option value="income">Income</option>
+      </select>
+      <input type="text" name="category" placeholder="Category" required>
+      <input type="date" name="date" required>
+      <input type="text" name="note" placeholder="Note (optional)">
+      <button type="submit">Add</button>
+    </form>
+
+    <h2>Spending by category</h2>
+    <ul class="categories">
+      {% for c in categories %}
+      <li>
+        <span>{{ c["category"] }}</span>
+        <span>₹{{ '%.2f' | format(c["total"]) }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+
+    <h2>Transactions</h2>
+    <table>
+      <tr>
+        <th>Date</th><th>Category</th><th>Amount</th><th>Note</th><th></th>
+      </tr>
+      {% for t in transactions %}
+      <tr>
+        <td>{{ t["date"] }}</td>
+        <td>{{ t["category"] }}</td>
+        <td class="{{ t['type'] }}">
+          {% if t['type'] == 'income' %}+{% else %}−{% endif %}₹{{ '%.2f' | format(t["amount"]) }}
+        </td>
+        <td>{{ t["note"] }}</td>
+        <td>
+          <a href="/edit/{{ t['id'] }}">Edit</a>
+          <form action="/delete/{{ t['id'] }}" method="post" style="display:inline">
+            <button type="submit" class="btn-delete">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </main>
+</body>
+</html>

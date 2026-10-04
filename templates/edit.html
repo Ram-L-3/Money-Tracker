@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Edit transaction</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main>
+    <h1>Edit transaction</h1>
+
+    <form method="post" class="add-form">
+      <input type="number" step="0.01" name="amount" value="{{ t['amount'] }}" required>
+      <select name="type">
+        <option value="expense" {% if t['type'] == 'expense' %}selected{% endif %}>Expense</option>
+        <option value="income" {% if t['type'] == 'income' %}selected{% endif %}>Income</option>
+      </select>
+      <input type="text" name="category" value="{{ t['category'] }}" required>
+      <input type="date" name="date" value="{{ t['date'] }}" required>
+      <input type="text" name="note" value="{{ t['note'] }}" placeholder="Note (optional)">
+      <button type="submit">Save</button>
+    </form>
+
+    <p><a href="/" style="color: var(--muted); text-decoration: none;">← Back</a></p>
+  </main>
+</body>
+</html>
